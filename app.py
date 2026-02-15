@@ -16,6 +16,9 @@ from sklearn.metrics import (
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import warnings
+warnings.filterwarnings('ignore')
+
 # Import model modules
 from model import ALL_MODELS, MODEL_FILES
 from utils import load_and_prepare_data, BaseModel
@@ -313,7 +316,7 @@ def run_streamlit_app():
                         )
                         st.text(report)
     else:
-        st.info("👆 Upload a CSV file to get started")
+        st.info("👆 Upload a CSV file to get started. We can download sample file by clicking **Download sample test_data.csv** button on left sidebar.")
     
     st.markdown("---")
     st.markdown("**ML Models Training & Metrics** | Adult Income Classification")
