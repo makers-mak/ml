@@ -1,8 +1,8 @@
-# Income Prediction System – BITS WILP ML Assignment 2
+# Income Prediction System
 
 ## Problem Statement
 
-Build a complete machine learning classification pipeline to predict whether a person's annual income exceeds $50,000 based on census data. The solution implements six different classification algorithms, evaluates them using multiple performance metrics, and deploys an interactive web application for real-time predictions.
+Build a complete machine learning classification pipeline to predict whether a person's annual income exceeds $50,000 based on census data. The solution implements six different classification algorithms, evaluates them using multiple performance metrics, and deploys an interactive Streamlit web application for real-time predictions.
 
 ## Dataset Description
 
@@ -24,7 +24,7 @@ Build a complete machine learning classification pipeline to predict whether a p
 
 All six models trained on the same 80/20 train-test split:
 
-| Model Name                | Type      | Key Parameters              |
+| ML Model Name             | Type      | Key Parameters              |
 |---------------------------|-----------|-----------------------------|
 | Logistic Regression       | Linear    | max_iter=1000               |
 | Decision Tree             | Tree      | default depth               |
@@ -35,29 +35,29 @@ All six models trained on the same 80/20 train-test split:
 
 ## Performance Metrics
 
-Each model is evaluated using six standard classification metrics:
+Each model is evaluated using six standard classification metrics, on chosen dataset (*100%):
 
-| ML Model              | Accuracy | AUC    | Precision | Recall | F1     | MCC    |
-|-----------------------|----------|--------|-----------|--------|--------|--------|
-| Logistic Regression   | X.XXXX   | X.XXXX | X.XXXX    | X.XXXX | X.XXXX | X.XXXX |
-| Decision Tree         | X.XXXX   | X.XXXX | X.XXXX    | X.XXXX | X.XXXX | X.XXXX |
-| kNN                   | X.XXXX   | X.XXXX | X.XXXX    | X.XXXX | X.XXXX | X.XXXX |
-| Naive Bayes           | X.XXXX   | X.XXXX | X.XXXX    | X.XXXX | X.XXXX | X.XXXX |
-| Random Forest         | X.XXXX   | X.XXXX | X.XXXX    | X.XXXX | X.XXXX | X.XXXX |
-| XGBoost               | X.XXXX   | X.XXXX | X.XXXX    | X.XXXX | X.XXXX | X.XXXX |
+| ML Model Name           | Accuracy | AUC    | Precision | Recall | F1     | MCC    |
+|-------------------------|----------|--------|-----------|--------|--------|--------|
+| Logistic Regression     | 0.8087   | 0.8210 | 0.7048    | 0.3533 | 0.4707 | 0.4021 |
+| Decision Tree           | 0.8102   | 0.7519 | 0.5992    | 0.6397 | 0.6188 | 0.4931 |
+| kNN                     | 0.7829   | 0.6780 | 0.5861    | 0.3342 | 0.4257 | 0.3222 |
+| Naive Bayes             | 0.7998   | 0.8401 | 0.6803    | 0.3176 | 0.4330 | 0.3659 |
+| Random Forest (Ensemble)| 0.8594   | 0.9108 | 0.7436    | 0.6346 | 0.6848 | 0.5981 |
+| XGBoost (Ensemble)      | 0.8762   | 0.9286 | 0.7761    | 0.6830 | 0.7266 | 0.6492 |
 
-> **Note**: Run `python train_models_simple.py` to generate actual metrics. They will be saved to `model/metrics_summary.csv`.
+> **Note**: Run `python app.py --train` to generate actual metrics, saved to `model/metrics_summary.csv`.
 
 ## Model Performance Observations
 
-| Model               | Observations                                                                                                                                                                                                              |
-|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Logistic Regression | Provides a solid baseline with good interpretability. Works well for this linearly separable problem. Fast training and prediction times make it suitable for real-time applications.                                    |
-| Decision Tree       | Captures non-linear patterns but may overfit on training data. Performance varies based on tree depth. Provides clear decision rules that are easy to explain to non-technical stakeholders.                              |
-| kNN                 | Performance depends heavily on the choice of k and distance metric. Sensitive to feature scaling. Computationally expensive for large datasets but no training phase required.                                           |
-| Naive Bayes         | Fast and efficient despite independence assumption. Works surprisingly well even when features are correlated. Handles categorical features naturally. Good for scenarios requiring probabilistic predictions.            |
-| Random Forest       | Ensemble approach reduces overfitting compared to single decision tree. Robust to outliers and handles mixed feature types well. Provides feature importance rankings. Strong candidate for production deployment.        |
-| XGBoost             | Typically achieves the best performance through gradient boosting. Handles class imbalance effectively. Includes regularization to prevent overfitting. Industry-standard choice for tabular data classification tasks. |
+| ML Model Name            | Observation about model performance                                                                                                                                                                                                              |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Logistic Regression      | Provides a solid baseline with good interpretability. Works well for this linearly separable problem. Fast training and prediction times make it suitable for real-time applications.                                    |
+| Decision Tree            | Captures non-linear patterns but may overfit on training data. Performance varies based on tree depth. Provides clear decision rules that are easy to explain to non-technical stakeholders. Good recall but lower precision                             |
+| kNN                      | Performance (low) depends heavily on the choice of k and distance metric. Sensitive to feature scaling. Computationally expensive for large datasets but no training phase required.                                           |
+| Naive Bayes              | Fast and efficient despite independence assumption (strong AUC). Works surprisingly well even when features are correlated. Handles categorical features naturally. Good for scenarios requiring probabilistic predictions.            |
+| Random Forest (Ensemble) | Ensemble approach reduces overfitting compared to single decision tree. Robust to outliers and handles mixed feature types well. Provides feature importance rankings. Strong candidate for production deployment.       |
+| XGBoost (Ensemble)       | Typically achieves the best performance through gradient boosting. Handles class imbalance effectively. Includes regularization to prevent overfitting. Industry-standard choice for tabular data classification tasks. Best overall: Highest Accuracy (87.62%), F1 (72.66%), AUC (92.86%).  |
 
 ## How to Run
 
@@ -70,14 +70,14 @@ pip install -r requirements.txt
 ### 2. Train Models
 
 ```bash
-python train_models_simple.py
+python3 app.py --train
 ```
 
 This script will:
 - Download the Adult Income dataset from UCI
 - Clean and encode the data
 - Train all 6 classification models
-- Save models to `model/` directory
+- Save models pkl to `model/` directory
 - Generate `model/metrics_summary.csv` with performance metrics
 
 **Expected Output**:
@@ -97,55 +97,54 @@ Training Logistic Regression...
 ✓ Training complete!
 ```
 
-### 3. Run Web Application
+### 3. Launch Web Application
 
 ```bash
-streamlit run app_simple.py
+streamlit run app.py
 ```
 
-The app will open at `http://localhost:8501`
+The app will open at `http://localhost:8501`. Note to check port.
 
 ### 4. Use the Application
 
 1. **View Model Comparison**: See performance metrics for all 6 models
 2. **Select Model**: Choose from dropdown in sidebar
 3. **Upload Test Data**: CSV file with same columns as training data
-4. **Get Predictions**: Click "Run Prediction" to see results
-5. **View Metrics**: If target column included, see performance evaluation
+4. **Get Predictions**: Click "Run Prediction" to see instant results
+5. **View Metrics**: If target column included, see performance evaluation (Accuracy, F1, Confusion Matrix). Detailed precision/recall per class.
 
 ## Project Structure
 
 ```
-ML/streamlit/
-├── app_simple.py              # Streamlit web application
-├── train_models_simple.py     # Model training pipeline
-├── requirements.txt           # Python dependencies
-├── README_ADULT_INCOME.md    # This file
+ML-streamlit/
+├── app.py                   # Streamlit web application + Training
+├── requirements.txt         # Python dependencies
+├── README.md                # This file
+├── utils.py                 # Data loading & BaseModel class
+├── download_test_data.py    # Helper to download dataset to Train
 ├── model/
-│   ├── logistic_regression.pkl
+│   ├── logistic_regression.py   # Simple Python class and model initializer
+│   ├── decision_tree.py
+│   ├── knn.py
+│   ├── naive_bayes.py
+│   ├── random_forest.py
+│   ├── xgboost.py
+│   │
+│   ├── logistic_regression.pkl  # models pkl
 │   ├── decision_tree.pkl
 │   ├── knn.pkl
 │   ├── naive_bayes.pkl
 │   ├── random_forest.pkl
 │   ├── xgboost.pkl
-│   ├── label_encoders.pkl    # For categorical encoding
-│   └── metrics_summary.csv    # Model performance metrics
-└── data/
-    └── (dataset downloaded automatically)
+│   │
+│   ├── label_encoders.pkl   # For categorical encoding
+│   └── metrics_summary.csv  # Model performance metrics
+└── test_data.csv            # Sample for upload (dataset)
 ```
 
 ## Key Features
 
-### Training Pipeline (`train_models_simple.py`)
-- ✅ Automatic dataset download from UCI
-- ✅ Data cleaning and validation
-- ✅ Simple label encoding for categorical features
-- ✅ Stratified train-test split (80/20)
-- ✅ All 6 models trained consistently
-- ✅ Comprehensive metric calculation
-- ✅ Model persistence with metadata
-
-### Web Application (`app_simple.py`)
+### Web Application (`app.py`)
 - ✅ Clean, intuitive user interface
 - ✅ Model performance comparison dashboard
 - ✅ Interactive model selection
@@ -197,7 +196,7 @@ for name, model in models.items():
 - **Joblib**: Model serialization
 
 
-## Sample Test Data Format
+## Sample Test Data Format: Adult Income dataset from UCI
 
 Your CSV file should have these columns:
 
@@ -207,28 +206,22 @@ age,workclass,fnlwgt,education,education_num,marital_status,occupation,relations
 50, Self-emp-not-inc,83311, Bachelors,13, Married-civ-spouse, Exec-managerial, Husband, White, Male,0,0,13, United-States,<=50K
 ```
 
-**Note**: The 'income' column is optional. Include it only if you want performance evaluation.
+**Note**: Include 'income', if we need performance evaluation.
 
 ## Deployment
 
 ### Streamlit Community Cloud
 
-1. Push code to GitHub repository
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Click "New app"
-4. Select your repository and branch
-5. Set main file: `app.py`
-6. Click "Deploy"
+1. Push code to GitHub repository: https://github.com/makers-mak/ml.git
+2. Visit [streamlit.io/cloud](https://share.streamlit.io)
+3. New app > Select repository and branch
+4. Set main file: `app.py` > Click "Deploy"
+**Live Demo**: https://makers-ml.streamlit.app/
 
 ## License & Acknowledgments
 
 - **Dataset**: UCI Machine Learning Repository
 - **Citation**: Dua, D. and Graff, C. (2019). UCI Machine Learning Repository. Irvine, CA: University of California, School of Information and Computer Science.
-
-## Author
-
-**Machine Learning Assignment 2**  
-Adult Income Classification System
+- **Author**: Adult Income Classification System
 
 ---
-
