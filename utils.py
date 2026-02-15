@@ -17,9 +17,16 @@ DATA_URL = "https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adul
 COLUMN_NAMES = [
     'age', 'workclass', 'fnlwgt', 'education', 'education_num',
     'marital_status', 'occupation', 'relationship', 'race', 'sex',
-    'capital_gain', 'capital_loss', 'hours_per_week', 'native_country', 'income'
+    'capital_gain', 'capital_loss', 'hours_per_week', 'native_country',
+    'income'
 ]
-TARGET = 'income' # Target column 
+TARGET = 'income' # Target column
+COLUMN_NAMES_KAG = [ # KAGGLE Columns
+    'age', 'workclass', 'fnlwgt', 'education', 'educational-num',
+    'marital-status', 'occupation', 'relationship', 'race', 'gender',
+    # 'capital_gain', 'capital_loss', 'hours_per_week', 'native_country', # Optional Columns in Kaggle.
+    'income'
+]
 TEST_SIZE = 0.2
 RANDOM_STATE = 42
 

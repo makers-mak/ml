@@ -164,7 +164,7 @@ def run_streamlit_app():
             mime="text/csv",
         )
     else:
-        st.sidebar.warning("Sample test_data.csv not found in the project folder. You can download from ")
+        st.sidebar.warning("Sample test_data.csv not found in the project folder. You can download from UCI and add headers manually")
     
     # File Upload
     st.header(" Upload Test Data")
@@ -305,7 +305,7 @@ def run_streamlit_app():
                     ax.set_title(f'Confusion Matrix - {selected_model}')
                     st.pyplot(fig)
                     
-                    with st.expander(" View Detailed Classification Report", expanded=True):
+                    with st.expander("**View Detailed Classification Report**", expanded=True):
                         report = classification_report(
                             y_true, predictions,
                             target_names=['≤50K', '>50K'],
