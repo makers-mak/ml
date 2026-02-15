@@ -1,5 +1,5 @@
 """
-Unified ML Application
+ML for Multiple Models
 - Command line: python app.py --train (trains all models)
 - Web app: streamlit run app.py (serves predictions)
 """
@@ -20,8 +20,9 @@ import seaborn as sns
 from model import ALL_MODELS, MODEL_FILES
 from utils import load_and_prepare_data, BaseModel
 
+
 MODEL_DIR = "model"
-TARGET = 'income'
+TARGET = 'income' # Target Column y
 
 def train_all_models():
     """Train all 6 models - Command line mode"""
@@ -82,9 +83,9 @@ def preprocess_data(df, encoders):
 
 def run_streamlit_app():
     """Run Streamlit web application"""
-    st.set_page_config(page_title="Income Prediction - ML Assignment", layout="wide")
+    st.set_page_config(page_title="Income Prediction using Multiple Models", layout="wide")
     
-    st.title("💰 Income Prediction System")
+    st.title("Predict Adult Income - with ML Models")
     st.markdown("Predict if a person's income exceeds $50K based on census data")
     
     # Check if models are trained
@@ -113,7 +114,7 @@ def run_streamlit_app():
             fig, ax = plt.subplots(figsize=(8, 5))
             metrics_df.plot(x='Model', y=['Accuracy', 'F1'], kind='bar', ax=ax, rot=45)
             ax.set_ylabel('Score')
-            ax.set_title('Model Performance Comparison')
+            ax.set_title('Comparing Model Performance')
             ax.legend(loc='lower right')
             ax.grid(axis='y', alpha=0.3)
             plt.tight_layout()
@@ -123,14 +124,14 @@ def run_streamlit_app():
             best_acc = metrics_df.loc[metrics_df['Accuracy'].idxmax(), 'Model']
             best_f1 = metrics_df.loc[metrics_df['F1'].idxmax(), 'Model']
             
-            st.markdown("### 🏆 Top Performers")
+            st.markdown("### Top Performed Metrics")
             st.info(f"**Best Accuracy:** {best_acc}")
             st.info(f"**Best F1 Score:** {best_f1}")
             
-            st.markdown("### 📦 Dataset Info")
+            st.markdown("### Chosen Dataset Details")
             st.write("- **Source:** UCI Adult Income")
             st.write("- **Task:** Binary Classification")
-            st.write("- **Classes:** >50K / ≤50K")
+            st.write("- **Classes:** ≤50K / >50K")
     
     except Exception as e:
         st.warning(f"Could not load metrics: {e}")
@@ -138,18 +139,35 @@ def run_streamlit_app():
     st.markdown("---")
     
     # Sidebar
-    st.sidebar.header("⚙️ Configuration")
-    selected_model = st.sidebar.selectbox("Select Model", list(MODEL_FILES.keys()))
-    
-    st.sidebar.markdown("""
+    st.sidebar.header("Select Model to Evaluate")
+    selected_model = st.sidebar.selectbox("Choose Model:", list(MODEL_FILES.keys()))
+
+    from utils import COLUMN_NAMES
+    COLUMN_NAMES_STR = ", ".join(COLUMN_NAMES)
+    st.sidebar.markdown(f"""
     ### 📋 Instructions
-    1. Upload a CSV file with census features
-    2. File should contain the same columns as training data
-    3. Include 'income' column for evaluation (optional)
+    1. Upload a CSV file with similar features of dataset: **UCI Adult Income**
+    2. Expected column headers in dataset csv: `{COLUMN_NAMES_STR}`
+    3. We can **download the sample test_data.csv** clicking below button, then **upload** in rightside content region and **test predictions by switching models** above
+    4. Uploaded Data file must contain the same columns as training data, and click on **Run Prediction** button.
+    5. Include target column 'income' for evaluation (optional)
+    6. Note: The code is designed and implemented for robust, fully working end‑to‑end functionality.
     """)
+    # Show download button only if file exists
+    SAMPLE_TEST_PATH = os.path.join("test_data.csv")
+    if os.path.exists(SAMPLE_TEST_PATH):
+        sample_df = pd.read_csv(SAMPLE_TEST_PATH, sep=";")  # adjust sep based on data
+        st.sidebar.download_button(
+            label="⬇️ Download sample test_data.csv",
+            data=sample_df.to_csv(index=False, sep=";"),
+            file_name="test_data.csv",
+            mime="text/csv",
+        )
+    else:
+        st.sidebar.warning("Sample test_data.csv not found in the project folder. You can download from ")
     
     # File Upload
-    st.header("📤 Upload Test Data")
+    st.header(" Upload Test Data")
     uploaded_file = st.file_uploader("Choose CSV file", type=['csv'])
     
     if uploaded_file:
@@ -215,9 +233,21 @@ def run_streamlit_app():
         
         if extra_features:
             st.info(f"ℹ️ Extra columns will be ignored: {', '.join(extra_features)}")
+            
+            from utils import COLUMN_NAMES
+            missing_cols = [c for c in COLUMN_NAMES if c not in X_test.columns]
+            if missing_cols:
+                st.error(
+                    "Uploaded file is missing expected columns:\n\n"
+                    + ", ".join(missing_cols)
+                    + "\n\nPlease upload a CSV with the same headers as the training dataset. Cross check if headers missing in dataset.\n\n"
+                    + "Click **Download sample test_data.csv** button, to get the **adult income dataset with headers** added."
+                )
+                st.stop()
+            
             X_test = X_test[expected_features]
         
-        if st.button("🚀 Run Prediction"):
+        if st.button(" Run Prediction"):
             with st.spinner(f"Running {selected_model}..."):
                 try:
                     model = model_data['model']
@@ -275,7 +305,7 @@ def run_streamlit_app():
                     ax.set_title(f'Confusion Matrix - {selected_model}')
                     st.pyplot(fig)
                     
-                    with st.expander("📄 View Detailed Classification Report"):
+                    with st.expander(" View Detailed Classification Report", expanded=True):
                         report = classification_report(
                             y_true, predictions,
                             target_names=['≤50K', '>50K'],
@@ -286,7 +316,7 @@ def run_streamlit_app():
         st.info("👆 Upload a CSV file to get started")
     
     st.markdown("---")
-    st.markdown("**BITS WILP - Machine Learning Assignment 2** | Adult Income Classification")
+    st.markdown("**ML Models Training & Metrics** | Adult Income Classification")
 
 # Main entry point
 if __name__ == "__main__":

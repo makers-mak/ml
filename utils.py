@@ -19,7 +19,7 @@ COLUMN_NAMES = [
     'marital_status', 'occupation', 'relationship', 'race', 'sex',
     'capital_gain', 'capital_loss', 'hours_per_week', 'native_country', 'income'
 ]
-TARGET = 'income'
+TARGET = 'income' # Target column 
 TEST_SIZE = 0.2
 RANDOM_STATE = 42
 

@@ -5,7 +5,7 @@ import pandas as pd
 from utils import COLUMN_NAMES
 
 # Download test data
-print("Downloading test data from UCI repository...")
+print("Downloading adult income test data from UCI repository...")
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test"
 
 try:
